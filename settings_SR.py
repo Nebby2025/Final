@@ -18,4 +18,4 @@ class Settings:
         #Wave settings
         self.wave_speed = 1
         self.wave_drop_speed = 10
-        self.fleet_direction = 1
+        self.wave_direction = 1

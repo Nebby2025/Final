@@ -1,12 +1,14 @@
 import pygame
 
+
 class Wave:
     """A class for a single Chum in the run."""
     def __init__(self, sr_game):
         """Initialize the chum and set its starting position."""
 
         self.screen = sr_game.screen
-        self.image = pygame.image.load('../images/Chum.png')
+        self.settings = sr_game.settings
+        self.image = pygame.image.load('images/Chum.png')
         self.rect = self.image.get_rect()
 
         self.rect.x = self.rect.width
@@ -14,12 +16,10 @@ class Wave:
 
         self.x = float(self.rect.x)
 
-        self.chum_speed = 1
-        self.wave_direction = 1
 
     def update(self):
-        """Move the chum to the right."""
-        self.x += (self.chum_speed * self.wave_direction)
+        """Move the wave to the right."""
+        self.x += (self.settings.wave_speed * self.settings.wave_direction)
         self.rect.x = self.x
 
     def check_edges(self):
