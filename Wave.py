@@ -3,11 +3,11 @@ import pygame
 
 class Wave:
     """A class for a single Chum in the run."""
-    def __init__(self, sr_game):
+    def __init__(self):
         """Initialize the chum and set its starting position."""
 
-        self.screen = sr_game.screen
-        self.settings = sr_game.settings
+        # self.screen = sr_game.screen
+        # self.settings = sr_game.settings
         self.image = pygame.image.load('images/Chum.png')
         self.rect = self.image.get_rect()
 

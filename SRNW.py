@@ -14,6 +14,7 @@ class SRNW:
 
         #Game characteristics
         self.wave = pygame.sprite.Group()
+        self._create_wave()
 
     def run_game(self):
         """Initializing game loop..."""
@@ -29,7 +30,7 @@ class SRNW:
                 self.settings.screen.blit(self.settings.dirt, (x*self.settings.dirt_rect.height, y*self.settings.dirt_rect.width))
 
     def _create_chum(self, chum_number, row_number):
-        chum = Wave(self)
+        chum = Wave()
         chum_width, chum_height = chum.rect.size
         chum.x = chum_width + (2 * chum_width * chum_number)
         chum.rect.x = chum.x
@@ -37,7 +38,7 @@ class SRNW:
         self.wave.add(chum)
 
     def _create_wave(self):
-        chum = Wave(self)
+        chum = Wave()
         chum_width, chum_height = chum.rect.size
         available_space_x = self.settings.screen_rect.width - (2 * chum_width)
         number_chum_x = available_space_x // (2 * chum_width)
@@ -51,8 +52,8 @@ class SRNW:
                 self._create_chum(chum_number, row_number)
 
     def _update_screen(self):
-        self.wave.draw(self.settings.screen)
         self._draw_background()
+        self.wave.draw(self.settings.screen)
         pygame.display.flip()
 
 if __name__ == '__main__':

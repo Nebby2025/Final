@@ -7,7 +7,7 @@ class Settings:
         """Initialize the SRNW's settings"""
 
         #screen settings
-        self.dirt = pygame.image.load('../images/tile_0034.png')
+        self.dirt = pygame.image.load('images/tile_0034.png')
         self.dirt_rect = self.dirt.get_rect()
         self.tile_size = self.dirt_rect.width
         self.screen = pygame.display.set_mode((30 * self.tile_size, 30 * self.tile_size))
