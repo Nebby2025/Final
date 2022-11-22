@@ -10,7 +10,7 @@ class Settings:
         self.dirt = pygame.image.load('images/tile_0034.png')
         self.dirt_rect = self.dirt.get_rect()
         self.tile_size = self.dirt_rect.width
-        self.screen = pygame.display.set_mode((33 * self.tile_size, 33 * self.tile_size))
+        self.screen = pygame.display.set_mode((40 * self.tile_size, 40 * self.tile_size))
         self.screen_rect = self.screen.get_rect()
         self.rows = self.screen_rect.height // self.tile_size
         self.cols = self.screen_rect.width // self.tile_size
@@ -22,3 +22,10 @@ class Settings:
 
         #Crab Tank settings
         self.tank_speed = 1
+
+        #Bullet settings
+        self.bullet_speed = 3
+        self.bullet_width = 3
+        self.bullet_height = 15
+        self.bullet_color = (0, 0, 255)
+        self.bullets_allowed = 10

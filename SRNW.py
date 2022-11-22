@@ -3,6 +3,7 @@ import pygame
 from settings_SR import Settings
 from Wave import Wave
 from Tank import Tank
+from ink import Bullet
 
 class SRNW:
     """Overall class to manage game assests and behaviour."""
@@ -18,14 +19,15 @@ class SRNW:
         #Game characteristics (add here after importing a class)
         self.tank = Tank(self)
         self.wave = pygame.sprite.Group()
+        self.bullet = pygame.sprite.Group()
         self._create_wave()
 
     def run_game(self):
         """Initializing game loop..."""
         while True:
             self._check_events()
-            if 1 == 1:
-                self.tank.update()
+            self.tank.update()
+            self._update_bullets()
             self._update_screen()
 
     def _check_events(self):
@@ -44,6 +46,8 @@ class SRNW:
             self.tank.moving_left = True
         elif event.key == pygame.K_RIGHT:
             self.tank.moving_right = True
+        elif event.key == pygame.K_SPACE:
+            self._fire_bullet()
         elif event.key == pygame.K_q:
             sys.exit()
         # elif event.key == pygame.K_SPACE:
@@ -54,6 +58,22 @@ class SRNW:
             self.tank.moving_left = False
         elif event.key == pygame.K_RIGHT:
             self.tank.moving_right = False
+
+    def _fire_bullet(self):
+        """Create a new bullet and add it to the bullets group"""
+        if len(self.bullet) < self.settings.bullets_allowed:
+            new_bullet = Bullet(self)
+            self.bullet.add(new_bullet)
+
+    def _update_bullets(self):
+        """Update the position of bullets and delete old bullets"""
+        #Update bullet position
+        self.bullet.update()
+
+        # Get rid of bullets that are not on screen
+        for bullet in self.bullet.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullet.remove(bullet)
 
     def _draw_background(self):
         #Draw the background for the game
@@ -85,8 +105,10 @@ class SRNW:
 
     def _update_screen(self):
         self._draw_background()
-        self.wave.draw(self.settings.screen)
         self.tank.blitme()
+        for bullet in self.bullet.sprites():
+            bullet.draw_bullet()
+        self.wave.draw(self.settings.screen)
         pygame.display.flip()
 
 if __name__ == '__main__':
