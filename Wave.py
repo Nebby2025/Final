@@ -9,7 +9,7 @@ class Wave(Sprite):
         """Initialize the chum and set its starting position."""
         super().__init__()
         self.screen = sr_game.screen
-        # self.settings = sr_game.settings
+        self.settings = sr_game.settings
 
         self.image = pygame.image.load('images/Chum.png')
         self.rect = self.image.get_rect()

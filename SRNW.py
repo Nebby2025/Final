@@ -28,6 +28,7 @@ class SRNW:
             self._check_events()
             self.tank.update()
             self._update_bullets()
+            self._update_wave()
             self._update_screen()
 
     def _check_events(self):
@@ -50,8 +51,6 @@ class SRNW:
             self._fire_bullet()
         elif event.key == pygame.K_q:
             sys.exit()
-        # elif event.key == pygame.K_SPACE:
-        #     self._fire_bullet()
 
     def _check_keyup_events(self, event):
         if event.key == pygame.K_LEFT:
@@ -75,6 +74,40 @@ class SRNW:
             if bullet.rect.bottom <= 0:
                 self.bullet.remove(bullet)
 
+        self._check_bullet_chum_collisions()
+
+    def _check_bullet_chum_collisions(self):
+        """Respond to bullet-chum collisions"""
+        #Check for any bullets have hit a chum
+        #If hit, delete both
+        collisions = pygame.sprite.groupcollide(self.bullet, self.wave, True, True)
+
+        if not self.wave:
+            #Destroy existing bullets and create a new wave
+            self.bullet.empty()
+            self._create_wave()
+            self.settings.better_bullets()
+            self.settings.increase_speed()
+
+    def _update_wave(self):
+        """Check if the wave is at an edge, then change its position"""
+        self._check_wave_edges()
+        self.wave.update()
+
+    def _check_wave_edges(self):
+        """Check if wave hits the edge of the screen"""
+        for chum in self.wave.sprites():
+            if chum.check_edges():
+                self._change_wave_direction()
+                break
+
+    def _change_wave_direction(self):
+        """Respond if any of the Chum have reached the screen's edge"""
+        for chum in self.wave.sprites():
+            chum.rect.y += self.settings.wave_drop_speed
+        self.settings.wave_direction *= -1
+
+
     def _draw_background(self):
         #Draw the background for the game
         for x in range(int(self.settings.rows)):
@@ -93,11 +126,11 @@ class SRNW:
         chum = Wave(self)
         chum_width, chum_height = chum.rect.size
         available_space_x = self.settings.screen_rect.width - (1 * chum_width)
-        number_chum_x = available_space_x // (1 * chum_width)
+        number_chum_x = available_space_x // (2 * chum_width)
 
         #Limit the wave
         available_space_y = (self.settings.screen_rect.height - (9 * chum_height))
-        number_rows = available_space_y // (2 * chum_height)
+        number_rows = available_space_y // (4 * chum_height)
 
         for row_number in range(number_rows):
             for chum_number in range(number_chum_x):

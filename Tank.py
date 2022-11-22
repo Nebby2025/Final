@@ -1,7 +1,6 @@
 import pygame
 
 
-
 class Tank:
     """Class for the player"""
     def __init__(self, sr_game):

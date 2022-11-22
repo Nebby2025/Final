@@ -16,16 +16,40 @@ class Settings:
         self.cols = self.screen_rect.width // self.tile_size
 
         #Wave settings
-        self.wave_speed = 1
-        self.wave_drop_speed = 10
+        #self.wave_speed = 1
+        self.wave_drop_speed = 5
         self.wave_direction = 1
 
         #Crab Tank settings
-        self.tank_speed = 1
+        #self.tank_speed = 1
 
         #Bullet settings
-        self.bullet_speed = 3
-        self.bullet_width = 3
-        self.bullet_height = 15
+        #self.bullet_speed = 3
+        self.bullet_width = 10
+        self.bullet_height = 10
         self.bullet_color = (0, 0, 255)
         self.bullets_allowed = 10
+
+        #Increase the game's speed for each wave defeated
+        self.speedup_scale = 1.2
+
+        self.initialize_dynamic_settings()
+
+    def initialize_dynamic_settings(self):
+        """Settings that change over the course of gameplay"""
+        self.tank_speed = 1.25
+        self.bullet_speed = 3
+        self.wave_speed = 1
+
+        self.wave_direction = 1
+
+    def increase_speed(self):
+        """Increase speed settings"""
+        self.tank_speed *= self.speedup_scale
+        self.bullet_speed *= self.speedup_scale
+        self.wave_speed *= self.speedup_scale
+
+    def better_bullets(self):
+        """Increase the size of bullets"""
+        self.bullet_width *= 2
+        self.bullets_allowed += 5
