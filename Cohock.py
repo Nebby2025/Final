@@ -1,15 +1,14 @@
 import pygame
 from pygame.sprite import Sprite
 
-class Wave(Sprite):
-    """A class for a single Chum in the run."""
+class Wave2(Sprite):
+    """A class for a single Cohock in the run."""
     def __init__(self, sr_game):
-        """Initialize the chum and set its starting position."""
+        """Initialize the cohock and set its starting position."""
         super().__init__()
         self.screen = sr_game.screen
         self.settings = sr_game.settings
-
-        self.image = pygame.image.load('images/Chum.png')
+        self.image = pygame.image.load('images/Cohock.png')
         self.rect = self.image.get_rect()
 
         self.rect.x = self.rect.width

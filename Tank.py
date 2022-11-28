@@ -24,6 +24,10 @@ class Tank:
         self.moving_left = False
         self.moving_right = False
 
+        #Flag for firing
+        self.firing = True
+
+
     def update(self):
         """Updates the Crab Tank's position based on movement flags"""
         #Update the CT's x value, not its rect.

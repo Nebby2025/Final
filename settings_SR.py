@@ -10,10 +10,11 @@ class Settings:
         self.dirt = pygame.image.load('images/tile_0034.png')
         self.dirt_rect = self.dirt.get_rect()
         self.tile_size = self.dirt_rect.width
-        self.screen = pygame.display.set_mode((40 * self.tile_size, 40 * self.tile_size))
+        self.screen = pygame.display.set_mode((30 * self.tile_size, 30 * self.tile_size))
         self.screen_rect = self.screen.get_rect()
         self.rows = self.screen_rect.height // self.tile_size
         self.cols = self.screen_rect.width // self.tile_size
+        self.bg_color = (242, 106, 15)
 
         #Wave settings
         #self.wave_speed = 1
@@ -31,7 +32,7 @@ class Settings:
         self.bullets_allowed = 10
 
         #Increase the game's speed for each wave defeated
-        self.speedup_scale = 1.2
+        self.speedup_scale = 1.02
 
         self.initialize_dynamic_settings()
 
@@ -40,7 +41,8 @@ class Settings:
         self.tank_speed = 1.25
         self.bullet_speed = 3
         self.wave_speed = 1
-
+        self.chum_points = 10
+        self.cohock_points = 50
         self.wave_direction = 1
 
     def increase_speed(self):
