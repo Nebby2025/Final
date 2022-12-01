@@ -27,7 +27,7 @@ class SRNW:
         self.bullet = pygame.sprite.Group()
         self.stats = GameStats(self)
         self.score = Scoreboard(self)
-        self._create_wave()
+        self._create_wave_2()
 
     def run_game(self):
         """Initializing game loop..."""
@@ -105,12 +105,12 @@ class SRNW:
                 self.stats.score += self.settings.cohock_points * len(cohock)
             self.score.prep_score()
 
-        if not self.wave:
-            #Destroy existing bullets and create a new wave
-            self.bullet.empty()
-            self._create_wave_2()
-            # self.settings.better_bullets()
-            # self.settings.increase_speed()
+        # if not self.wave:
+        #     #Destroy existing bullets and create a new wave
+        #     #self.bullet.empty()
+        #     self._create_wave_2()
+        #     # self.settings.better_bullets()
+        #     # self.settings.increase_speed()
 
     def _update_wave(self):
         """Check if the wave is at an edge, then change its position"""
@@ -124,22 +124,20 @@ class SRNW:
             if chum.check_edges():
                 self._change_wave_direction()
                 break
-        if not self.wave:
-            for cohock in self.wave2.sprites():
-                if cohock.check_edges():
-                    self._change_wave_direction()
-                    break
+        for cohock in self.wave2.sprites():
+            if cohock.check_edges():
+                self._change_wave_direction()
+                break
 
     def _change_wave_direction(self):
         """Respond if any of the Chum have reached the screen's edge"""
-        for chum in self.wave.sprites():
-            chum.rect.y += self.settings.wave_drop_speed
-        self.settings.wave_direction *= -1
+        # for chum in self.wave.sprites():
+        #     chum.rect.y += self.settings.wave_drop_speed
+        # self.settings.wave_direction *= -1
 
-        if not self.wave:
-            for cohock in self.wave2.sprites():
-                cohock.rect.y += self.settings.wave_drop_speed
-            self.settings.wave_direction *= -1
+        for cohock in self.wave2.sprites():
+            cohock.rect.y += self.settings.wave_drop_speed
+        self.settings.wave_direction *= -1
 
 
     def _draw_background(self):
@@ -182,17 +180,16 @@ class SRNW:
     def _create_wave_2(self):
         cohock = Wave2(self)
         cohock_width, cohock_height = cohock.rect.size
-        available_space_x = self.settings.screen_rect.width - (1 * cohock_width)
-        number_cohock_x = available_space_x // (2 * cohock_width)
+        available_space_x2 = self.settings.screen_rect.width - (1 * cohock_width)
+        number_cohock_x = available_space_x2 // (2 * cohock_width)
 
         # Limit the wave
-        available_space_y = (self.settings.screen_rect.height - (2 * cohock_height))
-        number_rows2 = available_space_y // (2 * cohock_height)
+        available_space_y2 = (self.settings.screen_rect.height - (2 * cohock_height))
+        number_rows2 = available_space_y2 // (2 * cohock_height)
 
         for row_number2 in range(number_rows2):
-            for cohock_number in range(number_cohock_x):
-                self._create_cohock(cohock_number, row_number2)
-
+            for co_number in range(number_cohock_x):
+                self._create_cohock(co_number, row_number2)
     def _update_screen(self):
         self._draw_background()
         self.tank.blitme()

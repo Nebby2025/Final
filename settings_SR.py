@@ -26,7 +26,7 @@ class Settings:
 
         #Bullet settings
         #self.bullet_speed = 3
-        self.bullet_width = 10
+        self.bullet_width = 500
         self.bullet_height = 10
         self.bullet_color = (0, 0, 255)
         self.bullets_allowed = 10
