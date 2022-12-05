@@ -5,7 +5,8 @@ class GameStats:
         """Initialize stats"""
         self.settings = sr_game.settings
         self.reset_stats()
-        self.high_score = 0
+        with open('high_score.txt') as f:
+            self.high_score = int(f.read())
         self.game_active = True
 
     def reset_stats(self):

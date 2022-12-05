@@ -30,9 +30,9 @@ class Timer:
         self.timer -= self.dt
         if self.timer >= 0:
             # self.timer -= self.dt
-            self.txt = self.font.render(str(round(self.timer, 2)), True, self.color)
+            self.txt = self.font.render(str(round(self.timer, 0)), True, self.color)
             self.screen.blit(self.txt, (150, 0))
-            self.dt = self.clock.tick(30) / 1000
+            self.dt = self.clock.tick(240) / 1000
 
 
 

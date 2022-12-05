@@ -62,6 +62,8 @@ class SRNW:
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
         elif event.key == pygame.K_q:
+            with open('high_score.txt', 'w', encoding = 'utf-8') as file:
+                file.write(f'{self.stats.high_score}')
             sys.exit()
 
     def _check_keyup_events(self, event):
