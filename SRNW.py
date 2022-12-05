@@ -29,6 +29,7 @@ class SRNW:
         self.score = Scoreboard(self)
         self._create_wave_2()
 
+
     def run_game(self):
         """Initializing game loop..."""
         while True:
@@ -97,20 +98,19 @@ class SRNW:
             for chum in collisions.values():
                 self.stats.score += self.settings.chum_points * len(chum)
             self.score.prep_score()
-            #if self.stats.high_score < self.stats.score:
-            self.stats.high_score += self.stats.score
+            self.score.check_high_score()
 
         if collisions2:
             for cohock in collisions2.values():
                 self.stats.score += self.settings.cohock_points * len(cohock)
             self.score.prep_score()
+            self.score.check_high_score()
 
-        # if not self.wave:
-        #     #Destroy existing bullets and create a new wave
-        #     #self.bullet.empty()
-        #     self._create_wave_2()
-        #     # self.settings.better_bullets()
-        #     # self.settings.increase_speed()
+        #Increase the Wave number
+        #self.stats.level += 1
+        #self.score.prep_level()
+
+
 
     def _update_wave(self):
         """Check if the wave is at an edge, then change its position"""

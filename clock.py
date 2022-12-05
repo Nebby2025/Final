@@ -27,6 +27,7 @@ while not done:
         #timer = 10  # Reset it to 10 or do something else.
     else:
         txt = font.render(str(round(timer, 2)), True, blue)
+        print(timer)
 
     screen.fill((0, 0, 0))
     screen.blit(txt, (300, 0))

@@ -14,9 +14,10 @@ class Scoreboard:
         self.text_color = (41, 194, 46)
         self.font = pygame.font.SysFont('comicsansms', 25)
 
-        #Prepare the initial score image
+        #Prepare the initial score images
         self.prep_score()
         self.prep_high_score()
+        self.prep_level()
 
     def prep_score(self):
         """Turn the score into a rendered image"""
@@ -33,13 +34,30 @@ class Scoreboard:
         """Draw score to the screen"""
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.high_score_image, self.high_score_rect)
+        self.screen.blit(self.level_image, self.level_rect)
 
     def prep_high_score(self):
         """Turn the highest score into an image"""
-        high_score = int(self.stats.high_score)
+        high_score = round(self.stats.high_score, -1)
         high_score_str = "{:,}".format(high_score)
         self.high_score_image = self.font.render(high_score_str, True, self.text_color, self.settings.bg_color)
 
         self.high_score_rect = self.high_score_image.get_rect()
         self.high_score_rect.left = self.screen_rect.left + 10
         self.high_score_rect.top = 20
+
+    def check_high_score(self):
+        """Check to see if there's a new high score"""
+        if self.stats.score > self.stats.high_score:
+            self.stats.high_score = self.stats.score
+            self.prep_high_score()
+
+    def prep_level(self):
+        """Turn the Wave number into an image"""
+        level_str = str(self.stats.level)
+        self.level_image = self.font.render(level_str, True, self.text_color, self.settings.bg_color)
+
+        #Position the Wave number in the center of the screen
+        self.level_rect = self.level_image.get_rect()
+        self.level_rect.centerx = self.screen_rect.centerx
+        self.level_rect.top = self.screen_rect.top

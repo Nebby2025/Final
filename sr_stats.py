@@ -11,7 +11,5 @@ class GameStats:
     def reset_stats(self):
         """Initialize stats that change during the game"""
         self.score = 0
+        self.level = 1
 
-    def maintained_stats(self):
-        """Initialize stats that do not change"""
-        self.high_score += self.score
