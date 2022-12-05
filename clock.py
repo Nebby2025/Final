@@ -24,10 +24,10 @@ while not done:
     timer -= dt
     if timer <= 0:
         txt = font.render('Game Over!', True, blue)
-        #timer = 10  # Reset it to 10 or do something else.
+        timer = 10  # Reset it to 10 or do something else.
     else:
         txt = font.render(str(round(timer, 2)), True, blue)
-        print(timer)
+        #print(timer)
 
     screen.fill((0, 0, 0))
     screen.blit(txt, (300, 0))

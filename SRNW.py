@@ -8,6 +8,7 @@ from ink import Bullet
 from sr_stats import GameStats
 from score import Scoreboard
 from Cohock import Wave2
+from timer import Timer
 
 class SRNW:
     """Overall class to manage game assests and behaviour."""
@@ -27,6 +28,8 @@ class SRNW:
         self.bullet = pygame.sprite.Group()
         self.stats = GameStats(self)
         self.score = Scoreboard(self)
+        self.timer = Timer(self)
+        self.clock = pygame.time.Clock()
         self._create_wave_2()
 
 
@@ -117,6 +120,8 @@ class SRNW:
         self._check_wave_edges()
         self.wave.update()
         self.wave2.update()
+        if len(self.wave2) < 5:
+            self._create_wave_2()
 
     def _check_wave_edges(self):
         """Check if wave hits the edge of the screen"""
@@ -185,7 +190,7 @@ class SRNW:
 
         # Limit the wave
         available_space_y2 = (self.settings.screen_rect.height - (2 * cohock_height))
-        number_rows2 = available_space_y2 // (2 * cohock_height)
+        number_rows2 = available_space_y2 // (3 * cohock_height)
 
         for row_number2 in range(number_rows2):
             for co_number in range(number_cohock_x):
@@ -198,6 +203,7 @@ class SRNW:
         self.wave.draw(self.settings.screen)
         self.wave2.draw(self.settings.screen)
         self.score.show_score()
+        self.timer.run_clock()
         pygame.display.flip()
 
 if __name__ == '__main__':
