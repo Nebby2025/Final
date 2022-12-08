@@ -15,7 +15,7 @@ class Timer:
         self.font = pygame.font.SysFont('comicsansms', 25)
 
         #Other clock settings
-        self.timer = 20
+        self.timer = 10
         self.dt = 0
         self.font = pygame.font.Font(None, 40)
         self.color = pygame.Color('dodgerblue')
@@ -33,6 +33,19 @@ class Timer:
             self.txt = self.font.render(str(round(self.timer, 0)), True, self.color)
             self.screen.blit(self.txt, (150, 0))
             self.dt = self.clock.tick(240) / 1000
+
+    def reset_clock(self):
+        """Set a short break between waves"""
+
+        self.timer = 8
+        self.timer -= self.dt
+        if self.timer >= 0:
+            self.txt = self.font.render(str(round(self.timer, 0)), True, self.color)
+            self.screen.blit(self.txt, (150, 0))
+            self.dt = self.clock.tick(240) / 1000
+
+    def reset(self):
+        self.timer = 10
 
 
 

@@ -1,6 +1,7 @@
 import random
 import sys
 import pygame
+import time
 from settings_SR import Settings
 from Wave import Wave
 from Tank import Tank
@@ -111,19 +112,37 @@ class SRNW:
             self.score.prep_score()
             self.score.check_high_score()
 
+    def _increase_wave_number(self):
         #Increase the Wave number
-        #self.stats.level += 1
-        #self.score.prep_level()
+        self.stats.level += 1
+        self.score.prep_level()
 
 
 
     def _update_wave(self):
         """Check if the wave is at an edge, then change its position"""
         self._check_wave_edges()
+        self._check_wave_size()
+        self._check_time_left()
         self.wave.update()
         self.wave2.update()
-        if len(self.wave2) < 5:
-            self._create_wave_2()
+        #print(self.timer.timer)
+
+    def _check_wave_size(self):
+         if len(self.wave2) < 5:
+             self._create_wave_2()
+
+    def _check_time_left(self):
+        if self.timer.timer <= 0:
+            self._rest()
+            self._increase_wave_number()
+            # self.timer.reset_clock()
+            # self.timer.run_clock()
+
+    def _rest(self):
+        self.wave2.empty()
+        self.timer.reset()
+        time.sleep(0.5)
 
     def _check_wave_edges(self):
         """Check if wave hits the edge of the screen"""
