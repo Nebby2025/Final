@@ -140,15 +140,17 @@ class SRNW:
     def _update_wave(self):
         """Check if the wave is at an edge, then change its position"""
         self._check_wave_edges()
-        self._check_wave_size()
+        #self._check_wave_size()
         self._check_time_left()
         self.wave.update()
         self.wave2.update()
+        self.wave3.update()
+        self.wave4.update()
         #print(self.timer.timer)
 
-    def _check_wave_size(self):
-         if len(self.wave2) + len(self.wave) < 20:
-             self._check_wave_number()
+    # def _check_wave_size(self):
+    #      if len(self.wave2) + len(self.wave) < 20:
+    #          self._check_wave_number()
 
     def _check_time_left(self):
         if self.timer.timer <= 0:
@@ -181,25 +183,36 @@ class SRNW:
                 break
         for cohock in self.wave2.sprites():
             if cohock.check_edges():
-                self._change_wave_direction()
+                self._change_wave_direction2()
                 break
         for goldie in self.wave3.sprites():
             if goldie.check_edges():
-                self._change_wave_direction()
+                self._change_wave_direction3()
                 break
         for smallfry in self.wave4.sprites():
             if smallfry.check_edges():
-                self._change_wave_direction()
+                self._change_wave_direction4()
                 break
 
     def _change_wave_direction(self):
         """Respond if any of the Chum have reached the screen's edge"""
-        # for chum in self.wave.sprites():
-        #     chum.rect.y += self.settings.wave_drop_speed
-        # self.settings.wave_direction *= -1
+        for chum in self.wave.sprites():
+            chum.rect.y += self.settings.wave_drop_speed
+        self.settings.wave_direction *= -1
 
+    def _change_wave_direction2(self):
         for cohock in self.wave2.sprites():
             cohock.rect.y += self.settings.wave_drop_speed
+        self.settings.wave_direction *= -1
+
+    def _change_wave_direction3(self):
+        for goldie in self.wave3.sprites():
+            goldie.rect.y += self.settings.wave_drop_speed
+        self.settings.wave_direction *= -1
+
+    def _change_wave_direction4(self):
+        for smallfry in self.wave4.sprites():
+            smallfry.rect.y += self.settings.wave_drop_speed
         self.settings.wave_direction *= -1
 
 
@@ -274,7 +287,7 @@ class SRNW:
         goldie = Wave3(self)
         goldie_width, goldie_height = goldie.rect.size
         available_space_x3 = self.settings.screen_rect.width - (2 * goldie_width)
-        number_goldie_x = available_space_x3 // (1 * goldie_width)
+        number_goldie_x = available_space_x3 // (2 * goldie_width)
 
         available_space_y3 = (self.settings.screen_rect.height - (2 * goldie_height))
         number_rows3 = available_space_y3 // (3 * goldie_height)
