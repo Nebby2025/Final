@@ -55,3 +55,5 @@ class Settings:
         """Increase the size of bullets"""
         self.bullet_width *= 2
         self.bullets_allowed += 5
+
+

@@ -129,8 +129,8 @@ class SRNW:
         #print(self.timer.timer)
 
     def _check_wave_size(self):
-         if len(self.wave2) < 5:
-             self._create_wave_2()
+         if len(self.wave2) + len(self.wave) < 20:
+             self._check_wave_number()
 
     def _check_time_left(self):
         if self.timer.timer <= 0:
@@ -141,8 +141,19 @@ class SRNW:
 
     def _rest(self):
         self.wave2.empty()
+        self.wave.empty()
+        self.bullet.empty()
         self.timer.reset()
         time.sleep(0.5)
+
+    def _check_wave_number(self):
+        self.stats.random_number()
+        if self.stats.rn <= 3:
+            self._create_wave()
+        else:
+            self._create_wave_2()
+
+
 
     def _check_wave_edges(self):
         """Check if wave hits the edge of the screen"""
