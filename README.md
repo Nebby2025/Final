@@ -22,6 +22,8 @@ score- Used to track current score, high score, current wave, and display lives 
 
 sr_stats- Used to initialize stats for the game and generate random numbers for use in SRNW
 
+timer- A class for the timer
+
 
 
 How to Play:
