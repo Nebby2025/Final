@@ -1,4 +1,4 @@
-import random
+
 import sys
 import pygame
 import time
@@ -9,6 +9,8 @@ from ink import Bullet
 from sr_stats import GameStats
 from score import Scoreboard
 from Cohock import Wave2
+from Goldie import Wave3
+from Smallfry import Wave4
 from timer import Timer
 
 class SRNW:
@@ -26,12 +28,14 @@ class SRNW:
         self.tank = Tank(self)
         self.wave = pygame.sprite.Group()
         self.wave2 = pygame.sprite.Group()
+        self.wave3 = pygame.sprite.Group()
+        self.wave4 = pygame.sprite.Group()
         self.bullet = pygame.sprite.Group()
         self.stats = GameStats(self)
         self.score = Scoreboard(self)
         self.timer = Timer(self)
         self.clock = pygame.time.Clock()
-        self._create_wave_2()
+        self._create_wave_3()
 
 
     def run_game(self):
@@ -91,14 +95,16 @@ class SRNW:
             if bullet.rect.bottom <= 0:
                 self.bullet.remove(bullet)
 
-        self._check_bullet_chum_collisions()
+        self._check_bullet_salmonid_collisions()
 
-    def _check_bullet_chum_collisions(self):
+    def _check_bullet_salmonid_collisions(self):
         """Respond to bullet-chum collisions"""
         #Check for any bullets have hit a chum
         #If hit, delete both
         collisions = pygame.sprite.groupcollide(self.bullet, self.wave, True, True)
         collisions2 = pygame.sprite.groupcollide(self.bullet, self.wave2, True, True)
+        collisions3 = pygame.sprite.groupcollide(self.bullet, self.wave3, True, True)
+        collisions4 = pygame.sprite.groupcollide(self.bullet, self.wave4, True, True)
 
         if collisions:
             for chum in collisions.values():
@@ -109,6 +115,18 @@ class SRNW:
         if collisions2:
             for cohock in collisions2.values():
                 self.stats.score += self.settings.cohock_points * len(cohock)
+            self.score.prep_score()
+            self.score.check_high_score()
+
+        if collisions3:
+            for goldie in collisions3.values():
+                self.stats.score += self.settings.goldie_points * len(goldie)
+            self.score.prep_score()
+            self.score.check_high_score()
+
+        if collisions4:
+            for smallfry in collisions4.values():
+                self.stats.score += self.settings.smallfry_points * len(smallfry)
             self.score.prep_score()
             self.score.check_high_score()
 
@@ -165,6 +183,14 @@ class SRNW:
             if cohock.check_edges():
                 self._change_wave_direction()
                 break
+        for goldie in self.wave3.sprites():
+            if goldie.check_edges():
+                self._change_wave_direction()
+                break
+        for smallfry in self.wave4.sprites():
+            if smallfry.check_edges():
+                self._change_wave_direction()
+                break
 
     def _change_wave_direction(self):
         """Respond if any of the Chum have reached the screen's edge"""
@@ -199,6 +225,22 @@ class SRNW:
         cohock.rect.y = cohock_height + (2 * cohock.rect.height * row_number2)
         self.wave2.add(cohock)
 
+    def _create_goldie(self, g_number, row_number3):
+        goldie = Wave3(self)
+        goldie_width, goldie_height = goldie.rect.size
+        goldie.x = goldie_width + (2 * goldie_width * g_number)
+        goldie.rect.x = goldie.x
+        goldie.rect.y = goldie_height + (2 * goldie.rect.height * row_number3)
+        self.wave3.add(goldie)
+
+    def _create_smallfry(self, sf_number, row_number4):
+        smallfry = Wave4(self)
+        smallfry_width, smallfry_height = smallfry.rect.size
+        smallfry.x = smallfry_width (2 * smallfry_width * sf_number)
+        smallfry.rect.x = smallfry.x
+        smallfry.rect.y = smallfry_height + (2 * smallfry.rect.height * row_number4)
+        self.wave4.add(smallfry)
+
 
     def _create_wave(self):
         chum = Wave(self)
@@ -227,6 +269,33 @@ class SRNW:
         for row_number2 in range(number_rows2):
             for co_number in range(number_cohock_x):
                 self._create_cohock(co_number, row_number2)
+
+    def _create_wave_3(self):
+        goldie = Wave3(self)
+        goldie_width, goldie_height = goldie.rect.size
+        available_space_x3 = self.settings.screen_rect.width - (2 * goldie_width)
+        number_goldie_x = available_space_x3 // (1 * goldie_width)
+
+        available_space_y3 = (self.settings.screen_rect.height - (2 * goldie_height))
+        number_rows3 = available_space_y3 // (3 * goldie_height)
+
+        for row_number3 in range(number_rows3):
+            for g_number in range(number_goldie_x):
+                self._create_goldie(g_number, row_number3)
+
+    def _create_wave_4(self):
+        smallfry = Wave4(self)
+        smallfry_width, smallfry_height = smallfry.rect.size
+        available_space_x4 = self.settings.screen_rect.width - (2 * smallfry_width)
+        number_smallfry_x = available_space_x4 // (1 * smallfry_width)
+
+        available_space_y4 = (self.settings.screen_rect.height - (5 * smallfry_height))
+        number_rows4 = available_space_y4 // (3 * smallfry_height)
+
+        for row_number4 in range(number_rows4):
+            for sf_number in range(number_smallfry_x):
+                self._create_smallfry(sf_number, row_number4)
+
     def _update_screen(self):
         self._draw_background()
         self.tank.blitme()
@@ -234,6 +303,8 @@ class SRNW:
             bullet.draw_bullet()
         self.wave.draw(self.settings.screen)
         self.wave2.draw(self.settings.screen)
+        self.wave3.draw(self.settings.screen)
+        self.wave4.draw(self.settings.screen)
         self.score.show_score()
         self.timer.run_clock()
         pygame.display.flip()

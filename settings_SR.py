@@ -43,6 +43,8 @@ class Settings:
         self.wave_speed = 1
         self.chum_points = 10
         self.cohock_points = 50
+        self.goldie_points = 200
+        self.smallfry_points = 5
         self.wave_direction = 1
 
     def increase_speed(self):
