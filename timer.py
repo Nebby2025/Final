@@ -15,7 +15,7 @@ class Timer:
         self.font = pygame.font.SysFont('comicsansms', 25)
 
         #Other clock settings
-        self.timer = 10
+        self.timer = 100
         self.dt = 0
         self.font = pygame.font.Font(None, 40)
         self.color = pygame.Color('dodgerblue')
@@ -45,7 +45,7 @@ class Timer:
             self.dt = self.clock.tick(240) / 1000
 
     def reset(self):
-        self.timer = 10
+        self.timer = 100
 
 
 
