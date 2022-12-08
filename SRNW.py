@@ -35,11 +35,13 @@ class SRNW:
         self.score = Scoreboard(self)
         self.timer = Timer(self)
         self.clock = pygame.time.Clock()
-        self._create_wave_3()
+        self._create_wave()
+        # self.music = pygame.mixer.music.play(-1, 0, 0)
 
 
     def run_game(self):
         """Initializing game loop..."""
+        self.music = pygame.mixer.music.play(-1, 0, 0)
         while True:
             self._check_events()
             if self.stats.game_active:
@@ -70,14 +72,16 @@ class SRNW:
             with open('high_score.txt', 'w', encoding = 'utf-8') as file:
                 file.write(f'{self.stats.high_score}')
             sys.exit()
+        elif event.key == pygame.K_d and self.stats.game_active == False:
+            self._restart_game()
 
     def _check_keyup_events(self, event):
         if event.key == pygame.K_LEFT:
             self.tank.moving_left = False
         elif event.key == pygame.K_RIGHT:
             self.tank.moving_right = False
-        elif event.key == pygame.K_SPACE:
-            self.tank.firing = False
+        # elif event.key == pygame.K_SPACE:
+        #     self.tank.firing = False
 
     def _fire_bullet(self):
         """Create a new bullet and add it to the bullets group"""
@@ -135,43 +139,64 @@ class SRNW:
         self.stats.level += 1
         self.score.prep_level()
 
+    def _restart_game(self):
+        self.settings.initialize_dynamic_settings()
+        self.stats.reset_stats()
+        self.stats.game_active = True
+
 
 
     def _update_wave(self):
         """Check if the wave is at an edge, then change its position"""
         self._check_wave_edges()
-        #self._check_wave_size()
         self._check_time_left()
+        self._add_more()
         self.wave.update()
         self.wave2.update()
         self.wave3.update()
         self.wave4.update()
-        #print(self.timer.timer)
+        self._check_tank_collisions()
+        self._check_salmonid_bottom()
 
-    # def _check_wave_size(self):
-    #      if len(self.wave2) + len(self.wave) < 20:
-    #          self._check_wave_number()
+    def _check_tank_collisions(self):
+
+        if pygame.sprite.spritecollideany(self.tank, self.wave):
+            self._tank_hit()
+
+        if pygame.sprite.spritecollideany(self.tank, self.wave2):
+            self._tank_hit()
+
+        if pygame.sprite.spritecollideany(self.tank, self.wave3):
+            self._tank_hit()
+
+        if pygame.sprite.spritecollideany(self.tank, self.wave4):
+            self._tank_hit()
 
     def _check_time_left(self):
         if self.timer.timer <= 0:
-            self._rest()
             self._increase_wave_number()
-            # self.timer.reset_clock()
-            # self.timer.run_clock()
+            self.settings.increase_speed()
+            self._rest()
 
     def _rest(self):
-        self.wave2.empty()
-        self.wave.empty()
-        self.bullet.empty()
+        self._empty_all()
         self.timer.reset()
-        time.sleep(0.5)
+        time.sleep(1.5)
+
+    def _add_more(self):
+        if len(self.wave) + len(self.wave2) + len(self.wave3) + len(self.wave4) < 15:
+            self._check_wave_number()
 
     def _check_wave_number(self):
         self.stats.random_number()
-        if self.stats.rn <= 3:
+        if self.stats.rn in range(0, 4):
             self._create_wave()
-        else:
+        elif self.stats.rn in range(4, 6):
             self._create_wave_2()
+        elif self.stats.rn in range(6, 10):
+            self._create_wave_4()
+        elif self.stats.rn == 10:
+            self._create_wave_3()
 
 
 
@@ -203,17 +228,17 @@ class SRNW:
     def _change_wave_direction2(self):
         for cohock in self.wave2.sprites():
             cohock.rect.y += self.settings.wave_drop_speed
-        self.settings.wave_direction *= -1
+        self.settings.wave_direction2 *= -1
 
     def _change_wave_direction3(self):
         for goldie in self.wave3.sprites():
             goldie.rect.y += self.settings.wave_drop_speed
-        self.settings.wave_direction *= -1
+        self.settings.wave_direction3 *= -1
 
     def _change_wave_direction4(self):
         for smallfry in self.wave4.sprites():
             smallfry.rect.y += self.settings.wave_drop_speed
-        self.settings.wave_direction *= -1
+        self.settings.wave_direction4 *= -1
 
 
     def _draw_background(self):
@@ -249,7 +274,7 @@ class SRNW:
     def _create_smallfry(self, sf_number, row_number4):
         smallfry = Wave4(self)
         smallfry_width, smallfry_height = smallfry.rect.size
-        smallfry.x = smallfry_width (2 * smallfry_width * sf_number)
+        smallfry.x = smallfry_width + (2 * smallfry_width * sf_number)
         smallfry.rect.x = smallfry.x
         smallfry.rect.y = smallfry_height + (2 * smallfry.rect.height * row_number4)
         self.wave4.add(smallfry)
@@ -300,14 +325,66 @@ class SRNW:
         smallfry = Wave4(self)
         smallfry_width, smallfry_height = smallfry.rect.size
         available_space_x4 = self.settings.screen_rect.width - (2 * smallfry_width)
-        number_smallfry_x = available_space_x4 // (1 * smallfry_width)
+        number_smallfry_x = available_space_x4 // (3 * smallfry_width)
 
         available_space_y4 = (self.settings.screen_rect.height - (5 * smallfry_height))
-        number_rows4 = available_space_y4 // (3 * smallfry_height)
+        number_rows4 = available_space_y4 // (7 * smallfry_height)
 
         for row_number4 in range(number_rows4):
             for sf_number in range(number_smallfry_x):
                 self._create_smallfry(sf_number, row_number4)
+
+    def _empty_all(self):
+        self.wave.empty()
+        self.wave2.empty()
+        self.wave3.empty()
+        self.wave4.empty()
+        self.bullet.empty()
+
+    def _tank_hit(self):
+        if self.stats.tanks_left > 0:
+            self.stats.tanks_left -= 1
+            self.score.prep_tanks()
+            self._empty_all()
+            self.tank.center_tank()
+            time.sleep(0.9)
+        else:
+            self.stats.game_active = False
+
+    def _check_chum_bottom(self):
+        screen_rect = self.screen.get_rect()
+        for chum in self.wave.sprites():
+            if chum.rect.bottom >= screen_rect.bottom:
+                self._tank_hit()
+                break
+
+    def _check_cohock_bottom(self):
+        screen_rect = self.screen.get_rect()
+        for cohock in self.wave.sprites():
+            if cohock.rect.bottom >= screen_rect.bottom:
+                self._tank_hit()
+                break
+
+    def _check_goldie_bottom(self):
+        screen_rect = self.screen.get_rect()
+        for goldie in self.wave.sprites():
+            if goldie.rect.bottom >= screen_rect.bottom:
+                self._tank_hit()
+                break
+
+    def _check_smallfry_bottom(self):
+        screen_rect = self.screen.get_rect()
+        for smallfry in self.wave.sprites():
+            if smallfry.rect.bottom >= screen_rect.bottom:
+                self._tank_hit()
+                break
+
+    def _check_salmonid_bottom(self):
+        self._check_chum_bottom()
+        self._check_smallfry_bottom()
+        self._check_cohock_bottom()
+        self._check_goldie_bottom()
+
 
     def _update_screen(self):
         self._draw_background()

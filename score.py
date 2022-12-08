@@ -1,10 +1,13 @@
 import pygame.font
+from pygame.sprite import Group
+from Tank import Tank
 
 class Scoreboard:
     """A class to report the score"""
 
     def __init__(self, sr_game):
         """Initialize scorekeeping attributes"""
+        self.sr_game = sr_game
         self.screen = sr_game.screen
         self.screen_rect = self.screen.get_rect()
         self.settings = sr_game.settings
@@ -18,6 +21,7 @@ class Scoreboard:
         self.prep_score()
         self.prep_high_score()
         self.prep_level()
+        self.prep_tanks()
 
     def prep_score(self):
         """Turn the score into a rendered image"""
@@ -35,6 +39,7 @@ class Scoreboard:
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.high_score_image, self.high_score_rect)
         self.screen.blit(self.level_image, self.level_rect)
+        self.tanks.draw(self.screen)
 
     def prep_high_score(self):
         """Turn the highest score into an image"""
@@ -61,3 +66,11 @@ class Scoreboard:
         self.level_rect = self.level_image.get_rect()
         self.level_rect.centerx = self.screen_rect.centerx
         self.level_rect.top = self.screen_rect.top
+
+    def prep_tanks(self):
+        self.tanks = Group()
+        for tank_number in range(self.stats.tanks_left):
+            tank = Tank(self.sr_game)
+            tank.rect.x = 10 + tank_number * tank.rect.width
+            tank.rect.y = 55
+            self.tanks.add(tank)

@@ -1,11 +1,12 @@
 import pygame
+from pygame.sprite import Sprite
 
 
-class Tank:
+class Tank(Sprite):
     """Class for the player"""
     def __init__(self, sr_game):
         """Initialize the Crab Tank and set its starting position"""
-
+        super().__init__()
         self.screen = sr_game.screen
         self.screen_rect = sr_game.screen.get_rect()
         self.settings = sr_game.settings

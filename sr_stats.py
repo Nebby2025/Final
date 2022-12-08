@@ -16,8 +16,9 @@ class GameStats:
         """Initialize stats that change during the game"""
         self.score = 0
         self.level = 1
+        self.tanks_left = self.settings.tank_limit
 
     def random_number(self):
         """Generate a random number that will be used to determine different events"""
-        self.rn = random.randint(0, 5)
+        self.rn = random.randint(0, 10)
 
